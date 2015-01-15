@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="shopList"  id="ng-app">
+<head>
+	<meta charset="UTF-8">
+	<title>Заголовок</title>
+	
+	<!-- <base href="[[++site_url]]" /> -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	
+	<link href='http://fonts.googleapis.com/css?family=Ubuntu+Condensed' rel='stylesheet' type='text/css'>
+	
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/styles.min.css">
+	
+	<script src="js/angular.js"></script>
+	<script src="js/jquery-2.1.1.min.js"></script>
+</head>
+<body ng-controller="listCtrl">
+	<div class="top-line">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h2>в списке: <span class="total">{{products.length}}</span></h2>
+					<h2>в корзине: <span class="total">{{calc}}</span></h2>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+
+				<div class="input-line">
+					<input type="text" class="input-product" ng-model='inputName'>
+					<button ng-click="add()" class="but-add"></button>
+				</div>
+
+				<div ng-repeat = 'product in products' class="product {{product.class}}">
+					<div class="name-hover" ng-click="buy($event, product)">
+						<div class="product__delete" ng-click="delete(product)"></div>
+					</div>
+					<div class="product__add"></div>
+					<div class="product__name">
+						<h2>{{product.name}}</h2>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</body>
+<script src="js/app.js"></script>
+</html>

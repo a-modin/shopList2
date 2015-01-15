@@ -1,0 +1,7 @@
+[
+	{"name":"Колбаса","price":"300","class":"product-buy"},
+	{"name":"Сыр","price":"200","class":"product-buy"},
+	{"name":"Сельдь","price":"80","class":"product-buy"},
+	{"name":"Кофе","price":"250"},
+	{"name":"Хлеб","price":"20","class":"product-buy"}
+]
