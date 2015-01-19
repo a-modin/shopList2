@@ -1,6 +1,10 @@
 var shopList;
 
+
+//////////////////////////////////////////////////
 // Нажатие клавиши Enter
+//////////////////////////////////////////////////
+
 var kp = function(e) {
 	if (e) keyCode = e.which
 	else if (event) keyCode=event.keyCode
@@ -14,35 +18,56 @@ document.onkeypress=kp;
 ///
 
 shopList = angular.module('shopList', []);
-shopList.controller('listCtrl', function($scope, $http) {
+shopList.controller('ListController', function($scope, $http) {
 	
-	// Функция подсчета количества купленных товаров
-	$scope.calcBuy = function(){
-		var calc = 0;
+
+	////////////////////////////////////////
+	// Функция подсчета количества и стоимости товаров
+	////////////////////////////////////////
+
+	$scope.calcPrice = function(){
+		var calc = 0, 
+			totalPriceBuy = 0,
+			totalPrice = 0;
+
 		for (var i = 0; i < $scope.products.length; i++) {
 			if ($scope.products[i].class === 'product-buy') {
 				calc += 1; 
+				totalPriceBuy += Number($scope.products[i].price * $scope.products[i].count);
 			};
+			totalPrice += $scope.products[i].price * $scope.products[i].count;
 		};
+
 		$scope.calc = calc;
+		$scope.totalPrice = totalPrice;
+		$scope.totalPriceBuy = totalPriceBuy;
 	}
 
+
+	//////////////////////////////////////////////////
 	// Забираем с сервера список продуктов
+	//////////////////////////////////////////////////
+
 	$http.get('products.json').success(function(data){
 		$scope.products = data;
-		$scope.calcBuy()
+		$scope.calcPrice()
 	});
 	
 
+	//////////////////////////////////////////////////
 	// Добавление в список
+	//////////////////////////////////////////////////
+
 	$scope.add = function(){
 		var newProduct = {
 			name: $scope.inputName,
-			price: $scope.inputPrice
+			price: $scope.inputPrice || 0,
+			count: 1,
 		};
 
 		$scope.products.unshift(newProduct)
-		$scope.calcBuy()
+		$scope.calcPrice()
+		$('.input-product').val('');
 
 		$.ajax({
 			url: 'send.php',
@@ -55,11 +80,15 @@ shopList.controller('listCtrl', function($scope, $http) {
 		})
 	}
 
+
+	//////////////////////////////////////////////////
 	// Добавление в корзину
-	$scope.buy = function(item, product){
+	//////////////////////////////////////////////////
+
+	$scope.buy = function(item, product, i){
 
 		var elem = angular.element(item.target)
-
+		
 		if (product.class != 'product-buy'){
 			product.class = 'product-buy';
 			elem.parent().addClass('product-buy')
@@ -76,13 +105,17 @@ shopList.controller('listCtrl', function($scope, $http) {
 		})
 
 		.done(function() {
-			console.log($scope.products);
+
 		})
 
-		$scope.calcBuy()
-	}
+		$scope.calcPrice();
+	};
 
+
+	//////////////////////////////////////////////////
 	// Удаление из списка
+	//////////////////////////////////////////////////
+
 	$scope.delete = function(item){
 
 		var index = $scope.products.indexOf(item)
@@ -98,7 +131,19 @@ shopList.controller('listCtrl', function($scope, $http) {
 			console.log("success");
 		})
 
-		$scope.calcBuy()
-	}
+		$scope.calcPrice();
+	};
 
+
+	//////////////////////////////////////////////////
+	// Редактирование
+	//////////////////////////////////////////////////
+	$scope.edit = function(){
+		if (this.product.edit != true) {
+			this.product.edit = true
+		}
+		else{
+			this.product.edit = false;
+		}
+	}
 });	

@@ -15,13 +15,20 @@
 	<script src="js/angular.js"></script>
 	<script src="js/jquery-2.1.1.min.js"></script>
 </head>
-<body ng-controller="listCtrl">
-	<div class="top-line">
+<body ng-controller="ListController">
+
+	<div class="top-line navbar navbar-fixed-top">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-12">
-					<h2>в списке: <span class="total">{{products.length}}</span></h2>
-					<h2>в корзине: <span class="total">{{calc}}</span></h2>
+				<div class="col-xs-6 total">
+					<div class="total__val">
+						<div class="total__val__text"><h2>В списке:</h2></div>
+						<div class="total__val__num"><span>{{products.length}}</span></div>
+						<div class="total__val__price"><span>{{totalPrice}} р</span></div>
+						<div class="total__val__text"><h2>В корзине:</h2></div>
+						<div class="total__val__num"><span>{{calc}}</span></div>
+						<div class="total__val__price"><span>{{totalPriceBuy}} р</span></div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -32,17 +39,38 @@
 			<div class="col-xs-12">
 
 				<div class="input-line">
-					<input type="text" class="input-product" ng-model='inputName'>
+					<input type="text" class="input-product" ng-model="inputName">
 					<button ng-click="add()" class="but-add"></button>
 				</div>
 
 				<div ng-repeat = 'product in products' class="product {{product.class}}">
-					<div class="name-hover" ng-click="buy($event, product)">
-						<div class="product__delete" ng-click="delete(product)"></div>
-					</div>
-					<div class="product__add"></div>
+
+					<div class="product__delete" ng-click="delete(product)"></div>
+					<div class="product__edit__but" ng-click="edit(product)"></div>
+					<div class="product__add" ng-click="buy($event, product)"></div>
+
 					<div class="product__name">
-						<h2>{{product.name}}</h2>
+						<h2>{{product.name}} <span>{{product.count + ' шт.'}} </span></h2>
+						<span>{{product.price * product.count || product.price + ' р'}} </span>
+					</div>
+
+					<div class="product__edit" ng-show="product.edit">
+
+						<span class="product__edit__span" ng-click="editInputName = true; name = true;" ng-hide="name">Название: {{product.name}} </span> 
+						<input class="product__edit__input" ng-model="product.name" ng-show="editInputName" type="text">
+						<button ng-click="calcPrice(); editInputName = false; name = false;" ng-show="editInputName" class="product__edit__ok" >ок</button>
+
+						<!-- <hr> -->
+
+						<span class="product__edit__span" ng-click="inputPrice = true; price = true;" ng-hide="price">Цена: {{product.price + ' р'}} </span> 
+						<input class="product__edit__input" ng-model="product.price" ng-show="inputPrice" type="text">
+						<button ng-click="calcPrice(); inputPrice = false; price = false" ng-show="inputPrice" class="product__edit__ok" >ок</button>
+
+						<!-- <hr> -->
+
+						<span class="product__edit__span" ng-click="inputCount = true; count = true;" ng-hide="count">Кол-во: {{product.count + ' шт'}}</span> 
+						<input class="product__edit__input" ng-model="product.count" ng-show="inputCount" type="text">
+						<button ng-click="calcPrice(); inputCount = false; count = false" ng-show="inputCount" class="product__edit__ok">ок</button>
 					</div>
 
 				</div>
